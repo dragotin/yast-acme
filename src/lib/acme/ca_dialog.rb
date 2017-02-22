@@ -17,8 +17,8 @@
 #  you may find current contact information at www.suse.com
 
 require "yast"
-require "lectl/query_presenter.rb"
-require "lectl/newcert_dialog.rb"
+require "acme/query_presenter.rb"
+require "acme/newcert_dialog.rb"
 
 Yast.import "UI"
 Yast.import "Label"
@@ -33,7 +33,7 @@ module Lectl
     include Yast::Logger
 
     def initialize
-      textdomain "lectl"
+      textdomain "acme"
 
       @query = QueryPresenter.new
      read_entries
@@ -125,9 +125,9 @@ module Lectl
     end
     
     def read_entries
-      log.info "Calling lectl'"
+      log.info "Calling acme'"
       @entries = @query.entries
-      log.info "Call to lectl returned #{@entries.size} entries."
+      log.info "Call to acme returned #{@entries.size} entries."
     rescue => e
       log.warn e.message
       @entries = []

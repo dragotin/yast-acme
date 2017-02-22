@@ -24,9 +24,9 @@ Yast.import "UI"
 
 module Lectl
   # Dialog allowing the user to set the arguments used to display the journal
-  # entries in Journalctl::EntriesDialog
+  # entries in ACME::EntriesDialog
   #
-  # @see Journalctl::EntriesDialog
+  # @see ACME::EntriesDialog
   class NewCertDialog
 
     include Yast::UIShortcuts
@@ -35,7 +35,7 @@ module Lectl
     INPUT_WIDTH = 20
 
     def initialize()
-      textdomain "lectl"
+      textdomain "acme"
       
       @hostnames = []
     end

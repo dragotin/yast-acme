@@ -16,27 +16,39 @@
 #  To contact SUSE about this file by physical or electronic mail,
 #  you may find current contact information at www.suse.com
 
-require "lectl/entry"
+require "acme/entry"
+require "delegate"
 
 module Lectl
-  # Wrapper for journalctl options.
-  class Query
+  # Presenter for Entry adding useful methods for the dialogs
+  class EntryPresenter < SimpleDelegator
 
-    # Creates a new query based on some filters
-    #
-    # @param filters [Hash] valid keys are :boot, :priority, :unit and :match,
-    #   the values must follow the format accepted by the corresponding
-    #   journalctl argument.
-    def initialize()
-     end
+    # NOTE: using %b is not i18n-friendly
+    TIME_FORMAT = "%Y-%m-%d"
 
-    # Calls journalctl and returns an Array of Entry objects
-    def entries
-      Entry.all()
+    def initialize(entry)
+      __setobj__(entry)
     end
 
-    def to_s
-      "Moep."
+    # Original entry
+    def entry
+      __getobj__
+    end
+
+    # Source of the entry to be displayed on listings.
+    #
+    # Mimics the default journalctl output.
+    def source
+      if process_name
+        "#{process_name}[#{pid}]"
+      else
+        syslog_id
+      end
+    end
+
+    # User readable representation of the timestamp
+    def formatted_time
+      valid_through.strftime(TIME_FORMAT)
     end
   end
 end

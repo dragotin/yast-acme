@@ -13,9 +13,30 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, contact SUSE LLC.
 
-#  To contact Novell about this file by physical or electronic mail,
+#  To contact SUSE about this file by physical or electronic mail,
 #  you may find current contact information at www.suse.com
 
-require "acme/ca_dialog"
+require "acme/entry"
 
-Lectl::CaDialog.new.run
+module Lectl
+  # Wrapper for journalctl options.
+  class Query
+
+    # Creates a new query based on some filters
+    #
+    # @param filters [Hash] valid keys are :boot, :priority, :unit and :match,
+    #   the values must follow the format accepted by the corresponding
+    #   journalctl argument.
+    def initialize()
+     end
+
+    # Calls journalctl and returns an Array of Entry objects
+    def entries
+      Entry.all()
+    end
+
+    def to_s
+      "Moep."
+    end
+  end
+end

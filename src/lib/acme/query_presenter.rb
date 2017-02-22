@@ -16,8 +16,8 @@
 #  To contact SUSE about this file by physical or electronic mail,
 #  you may find current contact information at www.suse.com
 
-require "lectl/query"
-require "lectl/entry_presenter"
+require "acme/query"
+require "acme/entry_presenter"
 require "delegate"
 
 module Lectl
@@ -27,11 +27,11 @@ module Lectl
     include Yast::I18n
     extend Yast::I18n
     # To be used in class methods
-    textdomain "lectl"
+    textdomain "acme"
 
     def initialize(args = {})
       # To be used in instance methods
-      textdomain "lectl"
+      textdomain "acme"
 
       query = Query.new()
       __setobj__(query)
