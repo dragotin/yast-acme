@@ -1,4 +1,4 @@
-# Copyright (c) 2014 SUSE LLC.
+# Copyright (c) 2017 SUSE Linux GmbH.
 #  All Rights Reserved.
 
 #  This program is free software; you can redistribute it and/or
