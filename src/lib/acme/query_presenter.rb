@@ -42,6 +42,9 @@ module ACME
       __getobj__
     end
 
+    def formatted_additional_hostnames
+      additional_hostnames.join(", ")
+    end
     # Decorated entries
     #
     # @return [Array<EntryPresenter>]
@@ -56,7 +59,7 @@ module ACME
     def columns
       [
         {label: _("Hostname"), method: :hostname},
-        {label: _("Add. Hostname"), method: :add_hostnames},
+        {label: _("Add. Hostname"), method: :formatted_additional_hostnames},
         {label: _("Valid through"), method: :formatted_time}
       ]
     end

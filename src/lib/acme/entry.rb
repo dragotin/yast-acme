@@ -24,10 +24,12 @@ require "byebug"
 module ACME
   class Entry
 
+    ACMECMD = "LANG=C sudo -u dehydrated /usr/bin/dehydrated -j"
+
     attr_reader :hostnames, :valid
     def initialize(hostnames, valid)
         @hostnames = hostnames
-        if not valid.nil?
+        if not (valid.nil? or valid.empty?)
           @valid = DateTime.parse(valid)
         end
     end
@@ -36,15 +38,29 @@ module ACME
       @hostnames[0]
     end
 
-    def add_hostnames
-      @hostnames[1, -1]
+    def additional_hostnames
+      @hostnames[1..-1]
     end
 
     # Calls dehydrated and returns an array of Entry objects
     def self.all()
-      content = File.read("/tmp/stub.json")
-      raw = JSON.parse(content)
-      raw.map { |item| new( item["requestednames"].split(" "), item["valid"] ) }
+      cmd = "#{ACMECMD}".strip
+      path = Yast::Path.new(".target.bash_output")
+      cmd_result = Yast::SCR.Execute(path, cmd)
+
+      if cmd_result["exit"].zero?
+        content = cmd_result["stdout"]
+        raw = JSON.parse(content)
+        raw.map { |item| new( item["requestednames"].split(" "), item["valid"] ) }
+      else
+        if cmd_result["stderr"] =~ /^Failed to .* timestamp:/
+          # Most likely, journalctl bug when an empty list is found
+          ""
+        else
+          raise "Calling journalctl failed: #{cmd_result["stderr"]}"
+        end
+      end
+
     end
   end
 end

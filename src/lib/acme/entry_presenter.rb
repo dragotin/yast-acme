@@ -46,9 +46,16 @@ module ACME
       end
     end
 
+    
     # User readable representation of the timestamp
     def formatted_time
-      valid.strftime(TIME_FORMAT)
+      if not valid.nil?
+        valid.strftime(TIME_FORMAT)
+      end
+    end
+        
+    def formatted_additional_hostnames
+      additional_hostnames.join(", ")
     end
   end
 end
