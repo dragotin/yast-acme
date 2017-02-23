@@ -116,6 +116,10 @@ module ACME
       open(file, 'a') { |f|
           f.puts entry
       }
+
+      read_entries
+      Yast::UI.ChangeWidget(Id(:entries_table), :Items, table_items)
+
     end
 
     # Table widget to display log entries
