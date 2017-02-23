@@ -18,8 +18,8 @@
 
 require "acme/entry"
 
-module Lectl
-  # Wrapper for journalctl options.
+module ACME
+  # Wrapper for acme options.
   class Query
 
     # Creates a new query based on some filters
@@ -28,7 +28,7 @@ module Lectl
     #   the values must follow the format accepted by the corresponding
     #   journalctl argument.
     def initialize()
-     end
+    end
 
     # Calls journalctl and returns an Array of Entry objects
     def entries

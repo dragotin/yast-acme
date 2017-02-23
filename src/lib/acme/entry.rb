@@ -21,25 +21,30 @@ require "yast"
 require "time"
 require "byebug"
 
-module Lectl
-  # An entry in the systemd journal
+module ACME
   class Entry
 
-    attr_reader :hostname, :add_hostname, :valid_through
-    
-    def initialize(cert)
-        @hostname = cert["domain"]
-        @add_hostname = cert["morenames"]
-        @valid_through = DateTime.parse(cert["valid"])
+    attr_reader :hostnames, :valid
+    def initialize(hostnames, valid)
+        @hostnames = hostnames
+        if not valid.nil?
+          @valid = DateTime.parse(valid)
+        end
     end
-    
-    # Calls journalctl and returns an array of Entry objects
-    #
-    # @param journalctl_args [String] Additional arguments to journalctl
+   
+    def hostname
+      @hostnames[0]
+    end
+
+    def add_hostnames
+      @hostnames[1, -1]
+    end
+
+    # Calls dehydrated and returns an array of Entry objects
     def self.all()
-      content = File.read("/tmp/json_hn.txt")
+      content = File.read("/tmp/stub.json")
       raw = JSON.parse(content)
-      raw.map  { |item| new( item ) }
+      raw.map { |item| new( item["requestednames"].split(" "), item["valid"] ) }
     end
   end
 end

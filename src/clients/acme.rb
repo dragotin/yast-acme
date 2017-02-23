@@ -18,4 +18,4 @@
 
 require "acme/ca_dialog"
 
-Lectl::CaDialog.new.run
+ACME::CaDialog.new.run

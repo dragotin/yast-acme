@@ -19,7 +19,7 @@
 require "acme/entry"
 require "delegate"
 
-module Lectl
+module ACME
   # Presenter for Entry adding useful methods for the dialogs
   class EntryPresenter < SimpleDelegator
 
@@ -48,7 +48,7 @@ module Lectl
 
     # User readable representation of the timestamp
     def formatted_time
-      valid_through.strftime(TIME_FORMAT)
+      valid.strftime(TIME_FORMAT)
     end
   end
 end

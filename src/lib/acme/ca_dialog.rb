@@ -24,7 +24,7 @@ Yast.import "UI"
 Yast.import "Label"
 Yast.import "Popup"
 
-module Lectl
+module ACME
   # Dialog to display journal entries with several filtering options
   class CaDialog
 
@@ -36,7 +36,7 @@ module Lectl
       textdomain "acme"
 
       @query = QueryPresenter.new
-     read_entries
+      read_entries
     end
 
     # Displays the dialog
@@ -90,8 +90,12 @@ module Lectl
           break
         when :new
           # The user clicked the filter button
-          NewCertDialog.new().run
-            
+          newcert = NewCertDialog.new
+          newcert.run
+          hostnames = newcert.hostnames
+          if not has_entry(hostnames)
+            new_entry("/etc/dehydrated/domains.txt", hostnames.join(" "))
+          end
         when :revoke
           # The content of the search box changed
         when :remove
@@ -100,6 +104,18 @@ module Lectl
           log.warn "Unexpected input #{input}"
         end
       end
+    end
+
+    def has_entry(hostnames)
+#      @entries.each{ |entry| entry.hostname == hostnames[0] add_hostname == hostnames[1:-1] } }
+      nil
+    end
+
+    # Create line in domains.txt 
+    def new_entry(file, entry)
+      open(file, 'a') { |f|
+          f.puts entry
+      }
     end
 
     # Table widget to display log entries
@@ -115,11 +131,9 @@ module Lectl
     end
 
     def table_items
-      # Reduce it to an array with only the visible fields
       entries_fields = @entries.map do |entry|
         @query.columns.map {|c| entry.send(c[:method]) }
       end
-    
       # Return the result as an array of Items
       entries_fields.map {|fields| Item(*fields) }
     end

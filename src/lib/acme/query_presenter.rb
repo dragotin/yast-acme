@@ -20,7 +20,7 @@ require "acme/query"
 require "acme/entry_presenter"
 require "delegate"
 
-module Lectl
+module ACME
   # Presenter for Query adding useful methods for the dialogs
   class QueryPresenter < SimpleDelegator
 
@@ -56,7 +56,7 @@ module Lectl
     def columns
       [
         {label: _("Hostname"), method: :hostname},
-        {label: _("Add. Hostname"), method: :add_hostname},
+        {label: _("Add. Hostname"), method: :add_hostnames},
         {label: _("Valid through"), method: :formatted_time}
       ]
     end

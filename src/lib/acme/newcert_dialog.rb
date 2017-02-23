@@ -22,7 +22,7 @@ require "set"
 
 Yast.import "UI"
 
-module Lectl
+module ACME
   # Dialog allowing the user to set the arguments used to display the journal
   # entries in ACME::EntriesDialog
   #
@@ -36,8 +36,6 @@ module Lectl
 
     def initialize()
       textdomain "acme"
-      
-      @hostnames = []
     end
 
     # Displays the dialog
@@ -46,19 +44,25 @@ module Lectl
       begin
         return event_loop
       ensure
+        @items = Yast::UI.QueryWidget(Id(:hostnames), :Items)
         Yast::UI.CloseDialog
       end
     end
 
+    def hostnames
+      hostnames = []
+      @items.each { |item| hostnames << item[1] }
+      hostnames
+    end
+
   private
-  
+
     def event_loop
       loop do
         case input = Yast::UI.UserInput
         when :cancel
           break
         when :ok
-          create_new_cert
           break
         when :remove
           remove_hostname  
@@ -73,23 +77,17 @@ module Lectl
     def add_hostname
       newname  = Yast::UI.QueryWidget(Id(:newhostname), :Value)
       oldnames = Yast::UI.QueryWidget(Id(:hostnames), :Items)
-#      if Buildins. oldnames.include?(newname)
-#        
-#
-#      end
-      oldnames = oldnames << newname
-      Yast::UI.ChangeWidget(Id(:hostnames), :Items, oldnames)
-      Yast::UI.ChangeWidget(Id(:newhostname), :Value, "")
+      if newname != ""
+        oldnames << Item(Id(newname.to_sym), newname)
+        Yast::UI.ChangeWidget(Id(:hostnames), :Items, oldnames)
+        Yast::UI.ChangeWidget(Id(:newhostname), :Value, "")
+      end
     end 
     
     def remove_hostname
-      values = Yast::UI.QueryWidget(Id(:hostnames), :Items) - [Yast::UI.QueryWidget(Id(:hostnames), :Value)]
+      values = Yast::UI.QueryWidget(Id(:hostnames), :Items)
+      values.delete_if { |item| item[2] == true } 
       Yast::UI.ChangeWidget(Id(:hostnames), :Items, values)
-    end
-    
-    # Translates the value of the widgets to a new QueryPresenter object
-    def create_new_cert
-      nil
     end
 
     # Draws the dialog
