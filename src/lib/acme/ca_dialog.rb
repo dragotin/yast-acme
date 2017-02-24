@@ -116,18 +116,18 @@ module ACME
     end
 
     def remove_entry(file, hname)
-       searchstr = ""
-       @entries.each { |entry|
+        searchstr = ""
+        @entries.each do |entry|
           s1 = entry.additional_hostnames.join("\\s+")
           searchstr = "\\s*#{entry.hostname}\\s+#{s1}" if entry.hostname == hname
-       }
+        end
 
        newcontent = []
-       open(file, 'r') { |f|
+       open(file, 'r') do |f|
           f.each_line do |l|
-            newcontent << l unless( l =~ /#{searchstr}/im )
+            @entries.each { |entry| newcontent << l unless( l =~ /#{searchstr}/i) }
           end
-       }
+       end
 
        byebug
        open(file, 'w') do |f|
