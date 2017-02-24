@@ -115,21 +115,37 @@ module ACME
       nil
     end
 
+    # gets a line from the domains.txt. Splits it, and leaves the first entry
+    # at the beginning, but sorts all other entries
+    def cmp_hostnames( line, hostnames_to_remove )
+        from_file_hn = line.split( /\s+/ )
+        hn1 = [from_file_hn[0] ]
+        hn1 << from_file_hn[1..-1].sort
+
+        hn1 == hostnames_to_remove
+    end
+
+    # remove an entry from domains.txt to remove the cert
     def remove_entry(file, hname)
-        searchstr = ""
+        hostnames_to_remove = []
         @entries.each do |entry|
-          s1 = entry.additional_hostnames.join("\\s+")
-          searchstr = "\\s*#{entry.hostname}\\s+#{s1}" if entry.hostname == hname
+          if entry.hostname == hname
+            hostnames_to_remove << entry.hostname
+            hostnames_to_remove << entry.additional_hostnames.sort
+            break
+          end
         end
 
-       newcontent = []
-       open(file, 'r') do |f|
+        newcontent = []
+        open(file, 'r') do |f|
           f.each_line do |l|
-            @entries.each { |entry| newcontent << l unless( l =~ /#{searchstr}/i) }
+            # only add entries to the new file which are not caught be the
+            # search string regexp built above
+            newcontent << l unless cmp_hostnames(l, hostnames_to_remove)
           end
-       end
+        end
 
-       byebug
+        byebug
        open(file, 'w') do |f|
          newcontent.each { |line| f.puts line}
        end
