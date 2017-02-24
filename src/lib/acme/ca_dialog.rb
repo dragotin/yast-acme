@@ -25,6 +25,8 @@ Yast.import "Label"
 Yast.import "Popup"
 
 module ACME
+
+
   # Dialog to display journal entries with several filtering options
   class CaDialog
 
@@ -64,12 +66,12 @@ module ACME
           VSpacing(0.3),
           HBox(
             table,
-          
+
           # Footer buttons
             VBox(
               VWeight(1, PushButton(Id(:new), _("New Cert..."))),
-              VWeight(1, PushButton(Id(:revoke), _("Revoke"))),
-              VWeight(1, PushButton(Id(:remove), _("Remove"))),
+              # VWeight(1, PushButton(Id(:revoke), _("Revoke"))),
+            VWeight(1, PushButton(Id(:remove), _("Remove"))),
               VStretch()
             )
           )
@@ -100,6 +102,8 @@ module ACME
           # The content of the search box changed
         when :remove
           # The user clicked the refresh button
+          selected = Yast::UI.QueryWidget(Id(:entries_table), :CurrentItem)
+          remove_entry("/etc/dehydrated/domains.txt", selected)
         else
           log.warn "Unexpected input #{input}"
         end
@@ -111,15 +115,38 @@ module ACME
       nil
     end
 
-    # Create line in domains.txt 
+    def remove_entry(file, hname)
+       searchstr = ""
+       @entries.each { |entry|
+          s1 = entry.additional_hostnames.join("\\s+")
+          searchstr = "\\s*#{entry.hostname}\\s+#{s1}" if entry.hostname == hname
+       }
+
+       newcontent = []
+       open(file, 'r') { |f|
+          f.each_line do |l|
+            newcontent << l unless( l =~ /#{searchstr}/im )
+          end
+       }
+
+       byebug
+       open(file, 'w') do |f|
+         newcontent.each { |line| f.puts line}
+       end
+       refresh_table
+    end
+
+    # Create line in domains.txt
     def new_entry(file, entry)
       open(file, 'a') { |f|
           f.puts entry
       }
+      refresh_table
+    end
 
+    def refresh_table
       read_entries
       Yast::UI.ChangeWidget(Id(:entries_table), :Items, table_items)
-
     end
 
     # Table widget to display log entries
@@ -141,7 +168,7 @@ module ACME
       # Return the result as an array of Items
       entries_fields.map {|fields| Item(*fields) }
     end
-    
+
     def read_entries
       log.info "Calling acme'"
       @entries = @query.entries

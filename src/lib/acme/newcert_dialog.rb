@@ -65,9 +65,9 @@ module ACME
         when :ok
           break
         when :remove
-          remove_hostname  
-        when :add 
-          add_hostname  
+          remove_hostname
+        when :add
+          add_hostname
         else
           raise "Unexpected input #{input}"
         end
@@ -82,11 +82,11 @@ module ACME
         Yast::UI.ChangeWidget(Id(:hostnames), :Items, oldnames)
         Yast::UI.ChangeWidget(Id(:newhostname), :Value, "")
       end
-    end 
-    
+    end
+
     def remove_hostname
       values = Yast::UI.QueryWidget(Id(:hostnames), :Items)
-      values.delete_if { |item| item[2] == true } 
+      values.delete_if { |item| item[2] == true }
       Yast::UI.ChangeWidget(Id(:hostnames), :Items, values)
     end
 
@@ -96,12 +96,12 @@ module ACME
         VBox(
           # Header
           Heading("Create new Certificate"),
-             
+
           HBox(
             InputField(Id(:newhostname), Opt(:hstretch), "", ""),
             PushButton(Id(:add), Yast::Label.AddButton)
           ),
-             
+
           HBox(
             SelectionBox(Id(:hostnames), "Valid for Hostnames:", []),
             VBox(

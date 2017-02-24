@@ -35,17 +35,6 @@ module ACME
       __getobj__
     end
 
-    # Source of the entry to be displayed on listings.
-    #
-    # Mimics the default journalctl output.
-    def source
-      if process_name
-        "#{process_name}[#{pid}]"
-      else
-        syslog_id
-      end
-    end
-
     
     # User readable representation of the timestamp
     def formatted_time

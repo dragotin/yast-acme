@@ -42,9 +42,6 @@ module ACME
       __getobj__
     end
 
-    def formatted_additional_hostnames
-      additional_hostnames.join(", ")
-    end
     # Decorated entries
     #
     # @return [Array<EntryPresenter>]
