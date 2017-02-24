@@ -159,7 +159,28 @@ module ACME
       refresh_table
     end
 
+    DEHYD_CMD = "LANG=C sudo -u dehydrated /usr/bin/dehydrated -c"
+    # Call the dehydrated script to refresh the certificates
+    def refresh_certificates
+      cmd = "#{DEHYD_CMD}".strip
+      path = Yast::Path.new(".target.bash_output")
+      cmd_result = Yast::SCR.Execute(path, cmd)
+
+      if cmd_result["exit"].zero?
+        content = cmd_result["stdout"]
+      else
+        if cmd_result["stderr"] =~ /^Failed to .* timestamp:/
+          # Most likely, journalctl bug when an empty list is found
+          ""
+        else
+          raise "Calling journalctl failed: #{cmd_result["stderr"]}"
+        end
+      end
+
+    end
+
     def refresh_table
+      refresh_certificates
       read_entries
       Yast::UI.ChangeWidget(Id(:entries_table), :Items, table_items)
     end
