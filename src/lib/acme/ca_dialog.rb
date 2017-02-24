@@ -126,7 +126,9 @@ module ACME
     def cmp_hostnames( line, hostnames_to_remove )
         from_file_hn = line.split( /\s+/ )
         hn1 = [from_file_hn[0] ]
-        hn1 << from_file_hn[1..-1].sort
+        more_hn = from_file_hn[1..-1]
+
+        hn1 << more_hn.sort unless more_hn == nil
 
         hn1 == hostnames_to_remove
     end
