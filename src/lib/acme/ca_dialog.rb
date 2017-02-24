@@ -67,13 +67,19 @@ module ACME
           HBox(
             table,
 
-          # Footer buttons
+          # Buttons to manipulate the certificates
             VBox(
               VWeight(1, PushButton(Id(:new), _("New Cert..."))),
               # VWeight(1, PushButton(Id(:revoke), _("Revoke"))),
             VWeight(1, PushButton(Id(:remove), _("Remove"))),
               VStretch()
             )
+          ),
+          VSpacing(0.3),
+
+          # Footer buttons
+          ButtonBox(
+            PushButton(Id(:close), Opt(:key_F9), Yast::Label.CloseButton)
           )
         )
       )
@@ -87,8 +93,8 @@ module ACME
     def event_loop
       loop do
         case input = Yast::UI.UserInput
-        when :cancel
-          # Break the loop
+        when :close
+          close_dialog
           break
         when :new
           # The user clicked the filter button
