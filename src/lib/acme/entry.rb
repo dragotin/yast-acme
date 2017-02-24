@@ -19,7 +19,6 @@
 require "json"
 require "yast"
 require "time"
-require "byebug"
 
 module ACME
   class Entry

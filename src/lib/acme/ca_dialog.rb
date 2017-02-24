@@ -145,7 +145,6 @@ module ACME
           end
         end
 
-        byebug
        open(file, 'w') do |f|
          newcontent.each { |line| f.puts line}
        end

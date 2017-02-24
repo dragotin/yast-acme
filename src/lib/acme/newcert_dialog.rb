@@ -17,7 +17,6 @@
 #  you may find current contact information at www.suse.com
 
 require "yast"
-require "byebug"
 require "set"
 
 Yast.import "UI"
