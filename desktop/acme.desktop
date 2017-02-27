@@ -1,3 +1,10 @@
+# Copyright (c) 2017 SUSE Linux GmbH.
+# All Rights Reserved.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of version 2 or 3 of the GNU General
+# Public License as published by the Free Software Foundation.
+
 [Desktop Entry]
 Type=Application
 Categories=Settings;System;Qt;X-SuSE-YaST;X-SuSE-YaST-System;
