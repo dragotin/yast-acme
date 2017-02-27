@@ -57,7 +57,8 @@ module ACME
       [
         {label: _("Hostname"), method: :hostname},
         {label: _("Add. Hostname"), method: :formatted_additional_hostnames},
-        {label: _("Valid through"), method: :formatted_time}
+        {label: _("Valid through"), method: :formatted_time},
+        {label: _("Path"), method: :certpath}
       ]
     end
   end

@@ -25,12 +25,13 @@ module ACME
 
     ACMECMD = "LANG=C sudo -u dehydrated /usr/bin/dehydrated -j"
 
-    attr_reader :hostnames, :valid
-    def initialize(hostnames, valid)
+    attr_reader :hostnames, :valid, :certpath
+    def initialize(hostnames, valid,certpath)
         @hostnames = hostnames
         if not (valid.nil? or valid.empty?)
           @valid = DateTime.parse(valid)
         end
+        @certpath = certpath
     end
    
     def hostname
@@ -50,16 +51,10 @@ module ACME
       if cmd_result["exit"].zero?
         content = cmd_result["stdout"]
         raw = JSON.parse(content)
-        raw.map { |item| new( item["requestednames"].split(" "), item["valid"] ) }
+        raw.map { |item| new( item["requestednames"].split(" "), item["valid"], item["certpath"] ) }
       else
-        if cmd_result["stderr"] =~ /^Failed to .* timestamp:/
-          # Most likely, journalctl bug when an empty list is found
-          ""
-        else
-          raise "Calling journalctl failed: #{cmd_result["stderr"]}"
-        end
+        raise "Calling dehydrated failed: #{cmd_result["stderr"]}"
       end
-
     end
   end
 end

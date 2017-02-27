@@ -26,10 +26,9 @@ Yast.import "Popup"
 
 module ACME
 
-
-  # Dialog to display journal entries with several filtering options
   class CaDialog
 
+    include Yast::Convert
     include Yast::UIShortcuts
     include Yast::I18n
     include Yast::Logger
@@ -69,9 +68,10 @@ module ACME
 
           # Buttons to manipulate the certificates
             VBox(
-              VWeight(1, PushButton(Id(:new), _("New Cert..."))),
+              VWeight(1, PushButton(Id(:new), Opt(:key_F2), _("New Cert..."))),
               # VWeight(1, PushButton(Id(:revoke), _("Revoke"))),
-            VWeight(1, PushButton(Id(:remove), _("Remove"))),
+              VWeight(1, PushButton(Id(:remove), Opt(:key_F3), _("Remove..."))),
+              VWeight(1, PushButton(Id(:show), Opt(:key_F4), _("Show..."))),
               VStretch()
             )
           ),
@@ -110,6 +110,8 @@ module ACME
           # The user clicked the refresh button
           selected = Yast::UI.QueryWidget(Id(:entries_table), :CurrentItem)
           remove_entry("/etc/dehydrated/domains.txt", selected)
+        when :show
+          show_cert
         else
           log.warn "Unexpected input #{input}"
         end
@@ -210,7 +212,7 @@ module ACME
         @query.columns.map {|c| entry.send(c[:method]) }
       end
       # Return the result as an array of Items
-      entries_fields.map {|fields| Item(*fields) }
+      entries_fields.map.with_index {|fields, index| Item(Id(index), *fields) }
     end
 
     def read_entries
@@ -221,6 +223,15 @@ module ACME
       log.warn e.message
       @entries = []
       Yast::Popup.Message(e.message)
+    end
+
+    def show_cert
+      selected = Yast::Convert.to_integer(Yast::UI.QueryWidget(Id(:entries_table), :CurrentItem))
+      certpath = Yast::Convert.to_string(Yast::UI.QueryWidget(:entries_table, Cell(selected, 3)))
+      cmd = "LANG=C openssl x509 -in #{certpath} -noout -text"
+      path = Yast::Path.new(".target.bash_output")
+      cmd_result = Yast::SCR.Execute(path, cmd)
+      Yast::Popup.LongMessage cmd_result["stdout"]
     end
   end
 end
