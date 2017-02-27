@@ -179,12 +179,7 @@ module ACME
       if cmd_result["exit"].zero?
         content = cmd_result["stdout"]
       else
-        if cmd_result["stderr"] =~ /^Failed to .* timestamp:/
-          # Most likely, journalctl bug when an empty list is found
-          ""
-        else
-          raise "Calling journalctl failed: #{cmd_result["stderr"]}"
-        end
+        raise "Calling dehydrated failed: #{cmd_result["stderr"]}"
       end
 
     end
