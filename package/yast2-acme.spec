@@ -25,6 +25,7 @@ Source0:        %{name}-%{version}.tar.bz2
 
 Requires:       yast2
 Requires:       yast2-ruby-bindings
+Requires:       dehydrated
 
 BuildRequires:  update-desktop-files
 BuildRequires:  yast2-ruby-bindings
