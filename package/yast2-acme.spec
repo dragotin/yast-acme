@@ -1,7 +1,7 @@
 #
 # spec file for package yast2-acme
 #
-# Copyright (c) 2017 SUSE LLC.
+# Copyright (c) 2017 SUSE LINUX GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -15,6 +15,7 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
+
 Name:           yast2-acme
 Version:        0.1.0
 Release:        0
@@ -23,25 +24,25 @@ BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source0:        %{name}-%{version}.tar.bz2
 
+Requires:       dehydrated
 Requires:       yast2
 Requires:       yast2-ruby-bindings
-Requires:       dehydrated
 
 BuildRequires:  update-desktop-files
-BuildRequires:  yast2-ruby-bindings
-BuildRequires:  yast2-devtools
 BuildRequires:  yast2
+BuildRequires:  yast2-devtools
+BuildRequires:  yast2-ruby-bindings
 #for install task
 BuildRequires:  rubygem(yast-rake)
 # for tests
 BuildRequires:  rubygem(rspec)
 
-Group:          System/YaST
-License:        GPL-2.0 or GPL-3.0
 Summary:        YaST2 - Example modules to read acme entries
+License:        GPL-2.0 or GPL-3.0
+Group:          System/YaST
 
 %description
-A YaST2 module to manage ACME certificates aka Let's Encrypt. 
+A YaST2 module to manage ACME certificates aka Let's Encrypt.
 
 %prep
 %setup -n %{name}-%{version}
@@ -60,3 +61,7 @@ rake install DESTDIR="%{buildroot}"
 %doc COPYING
 
 %build
+
+%changelog
+
+%changelog
