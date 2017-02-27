@@ -17,7 +17,7 @@
 
 
 Name:           yast2-acme
-Version:        0.1.0
+Version:        0.1.1
 Release:        0
 BuildArch:      noarch
 
@@ -57,11 +57,10 @@ rake install DESTDIR="%{buildroot}"
 %defattr(-,root,root)
 %{yast_dir}/clients/*.rb
 %{yast_dir}/lib/acme
+%{yast_desktopdir}/acme.desktop
 
 %doc COPYING
 
 %build
-
-%changelog
 
 %changelog
